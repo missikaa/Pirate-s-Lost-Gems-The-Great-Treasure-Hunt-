@@ -1,54 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pirate's Lost Gems – The Great Treasure Hunt</title>
+
+<style>
+:root{
+ --sea:#103f4a;
+ --deep:#092d38;
+ --paper:#fff3d5;
+ --ink:#49331f;
+ --gold:#f5bd45
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ min-height:100vh;
+ padding:18px;
+ background:radial-gradient(circle at 20% 10%,#347c82,#174e5a 48%,#092d38);
+ color:var(--ink);
+ font-family:Georgia,serif
+}
+
+button{font:inherit;cursor:pointer}
+
+.shell{max-width:1100px;margin:auto}
+
+.topline{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ align-items:center;
+ color:#ffe8b4;
+ margin:0 4px 14px
+}
+
+.brand{font-weight:bold;letter-spacing:1.2px}
+
+.seal{
+ border:1px solid #e9c77c;
+ border-radius:30px;
+ padding:7px 12px;
+ font-size:.82rem
+}
+
+.panel{
+ background:var(--paper);
+ border:7px solid #754627;
+ border-radius:23px;
+ overflow:hidden;
+ box-shadow:0 12px 0 #08252c,0 20px 35px #061c2480
+}
+
+.hero,.win{
+ text-align:center;
+ padding:clamp(24px,5vw,55px);
+ background:linear-gradient(#fff3d5ed,#f4dca9ed),
+ repeating-linear-gradient(45deg,#d9bd82 0 2px,#f4dca9 2px 7px)
+}
+
+.eyebrow{
+ font-size:.8rem;
+ letter-spacing:3px;
+ text-transform:uppercase;
+ color:#95602e;
+ font-weight:bold
+}
+
+h1{
+ font-size:clamp(2.1rem,6vw,4.4rem);
+ line-height:1.02;
+ margin:12px 0;
+ color:#633b20;
+ text-shadow:2px 3px #e8c477
+}
+
+.hero-art{
+ font-size:clamp(4rem,12vw,7rem);
+ margin:10px 0;
+ filter:drop-shadow(0 5px 2px #8c623c55)
+}
+
+.hero p{
+ font-size:1.08rem;
+ line-height:1.6;
+ max-width:680px;
+ margin:12px auto 23px
+}
+
+.primary{
+ background:linear-gradient(#ffd56b,#eaa52d);
+ border:3px solid #9a5b22;
+ color:#563416;
+ border-radius:14px;
+ padding:13px 25px;
+ font-weight:bold;
+ font-size:1.05rem;
+ box-shadow:0 5px 0 #9a5b22
+}
+
+.primary:hover{transform:translateY(-2px)}
+
+.note{
+ font-size:.83rem;
+ color:#80613d;
+ margin-top:17px
+}
+
+.hidden{display:none!important}
+
+.game-wrap{padding:clamp(12px,3vw,25px)}
+
+.game-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:12px;
+ flex-wrap:wrap;
+ margin-bottom:13px
+}
+
+.game-title{
+ font-size:clamp(1.3rem,3vw,2rem);
+ margin:0;
+ color:#633b20
+}
+
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+
+.stat{
+ background:#f8e5b9;
+ border:2px solid #d5b475;
+ border-radius:12px;
+ padding:7px 11px;
+ text-align:center;
+ min-width:90px
+}
+
+.stat small{
+ display:block;
+ font-size:.68rem;
+ text-transform:uppercase;
+ letter-spacing:1px;
+ color:#8a6538
+}
+
+.stat strong{
+ font-size:1.1rem;
+ font-variant-numeric:tabular-nums
+}
+
+.gem-row{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ flex-wrap:wrap;
+ background:#ead19b;
+ border:2px dashed #bb9455;
+ border-radius:13px;
+ padding:9px 13px;
+ margin-bottom:12px
+}
+
+.gems{display:flex;gap:8px}
+
+.gem-slot{
+ width:34px;
+ height:34px;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ background:#c5a36c55;
+ border:1px solid #b78a4b;
+ filter:grayscale(1);
+ opacity:.5;
+ font-size:1.45rem
+}
+
+.gem-slot.found{
+ filter:none;
+ opacity:1;
+ background:#fff2c4;
+ box-shadow:0 0 10px #e7b849
+}
+
+.play-area{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) 250px;
+ gap:15px;
+ align-items:start
+}
+
+.board-card{
+ background:#e6c98e;
+ border:3px solid #9d6a36;
+ border-radius:16px;
+ padding:10px
+}
+
+.board-caption{
+ text-align:center;
+ font-weight:bold;
+ margin:0 0 8px;
+ color:#684321
+}
+
+/* COORDINATE GRID */
+.board{
+ display:grid;
+ grid-template-columns:27px repeat(11,minmax(0,1fr));
+ grid-template-rows:repeat(11,minmax(25px,1fr)) 25px;
+ gap:3px;
+ max-width:680px;
+ margin:auto
+}
+
+/* AXIS NUMBERS */
+.y-tick,.x-tick{
+ display:grid;
+ place-items:center;
+ font-weight:bold;
+ color:#70451f;
+ font-size:.8rem
+}
+
+.x-tick{
+ grid-row:12;
+}
+
+/* COORDINATE CELLS */
+.cell{
+ border:1px solid #ad8b54;
+ background:#fff4d9;
+ border-radius:5px;
+ min-width:0;
+ aspect-ratio:1;
+ display:grid;
+ place-items:center;
+ padding:0;
+ color:#533b25;
+ font-size:clamp(.68rem,1.7vw,1.15rem);
+ position:relative;
+ transition:background .12s,transform .12s
+}
+
+.cell:hover:not(:disabled){
+ background:#ffe39b;
+ transform:scale(1.06);
+ z-index:1;
+ border:2px solid #9a6127
+}
+
+.cell:disabled{cursor:default}
+
+.cell.miss{
+ background:#d4e2d5;
+ color:#426d5c
+}
+
+.cell.hit{
+ background:#ffe18b;
+ border:2px solid #d29422;
+ font-size:clamp(1rem,2.4vw,1.5rem);
+ box-shadow:inset 0 0 0 2px #fff0b5
+}
+
+.cell.landmark{
+ background:#d5e6c3;
+ border:2px solid #668a4b;
+ font-size:clamp(1rem,2.2vw,1.5rem);
+ cursor:default
+}
+
+.cell.landmark:hover{transform:none}
+
+.cell .tiny{
+ font-size:.58em;
+ position:absolute;
+ bottom:1px;
+ right:3px;
+ opacity:.65
+}
+
+/* AXIS LABELS */
+.axis-x{
+ display:flex;
+ justify-content:flex-end;
+ align-items:center;
+ gap:5px;
+ max-width:calc(100% - 27px);
+ margin:5px 0 0 27px;
+ font-weight:bold;
+ color:#70451f
+}
+
+.axis-y{
+ position:absolute;
+ left:0;
+ top:-18px;
+ font-weight:bold;
+ color:#70451f;
+ font-size:.95rem
+}
+
+.board-frame{
+ position:relative;
+ padding-top:20px;
+ padding-left:1px
+}
+
+/* PIRATE INSTRUCTIONS PANEL */
+.side{
+ background:#f4e1b7;
+ border:2px solid #d2b277;
+ border-radius:15px;
+ padding:14px
+}
+
+.pirate{
+ font-size:2.7rem;
+ text-align:center;
+ margin:0 0 3px
+}
+
+.side h3{
+ text-align:center;
+ margin:0 0 9px;
+ color:#633b20
+}
+
+.message{
+ background:#fff6df;
+ border:2px solid #dfc28b;
+ border-radius:11px;
+ padding:10px;
+ min-height:70px;
+ line-height:1.42;
+ font-size:.91rem
+}
+
+.clue-box{
+ margin-top:11px;
+ background:#fff0c9;
+ border:2px dashed #bc8a43;
+ border-radius:11px;
+ padding:11px
+}
+
+.clue-title{
+ font-size:.72rem;
+ text-transform:uppercase;
+ letter-spacing:1px;
+ color:#94612c;
+ font-weight:bold
+}
+
+.clue{
+ font-size:.98rem;
+ line-height:1.45;
+ margin-top:5px;
+ font-weight:bold
+}
+
+.clue small{
+ display:block;
+ font-weight:normal;
+ font-size:.78rem;
+ color:#795d3d;
+ margin-top:5px
+}
+
+.coordinate{
+ font-size:1rem;
+ font-weight:bold;
+ color:#a04d26;
+ text-align:center;
+ margin:10px 0 2px
+}
+
+.hint{
+ font-size:.78rem;
+ color:#765b3c;
+ line-height:1.4;
+ margin:8px 0 0
+}
+
+.controls{
+ display:flex;
+ gap:9px;
+ justify-content:center;
+ flex-wrap:wrap;
+ margin-top:14px
+}
+
+.secondary{
+ background:#fff0ce;
+ border:2px solid #b98c50;
+ color:#654322;
+ border-radius:10px;
+ padding:8px 13px;
+ font-weight:bold
+}
+
+.footer{
+ text-align:center;
+ color:#ffe8b4;
+ font-size:.8rem;
+ margin:14px 0 0
+}
+
+/* VICTORY SCREEN */
+.win .trophy{font-size:5rem}
+
+.win h2{
+ font-size:clamp(2rem,5vw,3.3rem);
+ color:#633b20;
+ margin:8px 0
+}
+
+.win p{line-height:1.6}
+
+.final-time{
+ font-size:2rem;
+ color:#9b5c1d;
+ font-weight:bold;
+ margin:14px
+}
+
+.best-box{
+ background:#fff1c9;
+ border:2px dashed #c28b3b;
+ border-radius:13px;
+ padding:12px;
+ display:inline-block;
+ margin:5px 0 18px
+}
+
+/* MOBILE RESPONSIVENESS */
+@media(max-width:780px){
+ body{padding:9px}
+
+ .play-area{grid-template-columns:1fr}
+
+ .side{
+  display:grid;
+  grid-template-columns:55px 1fr;
+  gap:7px;
+  align-items:center
+ }
+
+ .side h3{text-align:left}
+
+ .message,.clue-box,.coordinate,.hint{
+  grid-column:1/-1
+ }
+
+ .board-card{padding:6px}
+
+ .board{
+  gap:2px;
+  grid-template-columns:22px repeat(11,minmax(0,1fr));
+  grid-template-rows:repeat(11,minmax(21px,1fr)) 22px
+ }
+
+ .cell{border-radius:3px}
+
+ .axis-x{
+  max-width:calc(100% - 22px);
+  margin-left:22px
+ }
+}
+
+@media(max-width:390px){
+ .stats{width:100%}
+ .stat{flex:1;min-width:0}
+ .gem-slot{width:29px;height:29px}
+ .gems{gap:4px}
+}
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+<div class="topline">
+ <div class="brand">☠ THE SEVEN SEAS MATH QUEST</div>
+ <div class="seal">⚓ COORDINATE ADVENTURE</div>
+</div>
+
+<main class="panel">
+
+<!-- INTRO SCREEN -->
+<section id="intro" class="hero">
+
+ <div class="eyebrow">Ahoy, young explorers!</div>
+ <div class="hero-art">🏴‍☠️ 💎 🏝️</div>
+
+ <h1>Pirate's Lost Gems</h1>
+
+ <p>
+ Oh no! Captain Barnacle has lost his
+ <b>five precious gems</b> somewhere on Treasure Island.
+ His ship is ready to sail, but he cannot leave without them!
+ </p>
+
+ <p>
+ <b>Will you help the captain find all five gems?</b><br>
+ Study the island landmarks, follow the distance clues
+ and search the coordinate map!
+ </p>
+
+ <button class="primary" id="startBtn">
+ ⚓ START THE ADVENTURE!
+ </button>
+
+ <div class="note">
+ Use the clues · Find all 5 gems · Beat the best treasure-hunting time!
+ </div>
+
+</section>
+
+
+<!-- GAME SCREEN -->
+<section id="game" class="game-wrap hidden">
+
+ <div class="game-head">
+
+  <h2 class="game-title">🗺️ Treasure Island Map</h2>
+
+  <div class="stats">
+
+   <div class="stat">
+    <small>⏱ Time</small>
+    <strong id="timer">00:00</strong>
+   </div>
+
+   <div class="stat">
+    <small>💎 Found</small>
+    <strong id="count">0 / 5</strong>
+   </div>
+
+   <div class="stat">
+    <small>🏆 Best time</small>
+    <strong id="best">—</strong>
+   </div>
+
+  </div>
+ </div>
+
+
+ <div class="gem-row">
+
+  <strong>Captain's missing gems:</strong>
+
+  <div class="gems">
+   <span class="gem-slot" id="gem0">💎</span>
+   <span class="gem-slot" id="gem1">💎</span>
+   <span class="gem-slot" id="gem2">💎</span>
+   <span class="gem-slot" id="gem3">💎</span>
+   <span class="gem-slot" id="gem4">💎</span>
+  </div>
+
+ </div>
+
+
+ <div class="play-area">
+
+  <!-- COORDINATE MAP -->
+  <div class="board-card">
+
+   <p class="board-caption">
+    Look at the island landmarks. Tap a grid point to search!
+   </p>
+
+   <div class="board-frame">
+
+    <div class="axis-y">Y-axis ↑</div>
+
+    <div
+     id="board"
+     class="board"
+     aria-label="First quadrant coordinate grid from zero to ten">
+    </div>
+
+   </div>
+
+   <div class="axis-x">
+    <span>X-axis →</span>
+   </div>
+
+  </div>
+
+
+  <!-- INSTRUCTIONS AND CLUES -->
+  <aside class="side">
+
+   <div class="pirate" id="pirate">🏴‍☠️</div>
+
+   <div>
+    <h3>Captain Barnacle says...</h3>
+
+    <div class="message" id="message" aria-live="polite">
+     Arrr! Read your clue carefully, matey!
+    </div>
+   </div>
+
+   <div class="clue-box">
+
+    <div class="clue-title">📜 Your treasure clue</div>
+
+    <div class="clue" id="clue">
+     The clue will appear here.
+    </div>
+
+    <small id="clueProgress"></small>
+
+   </div>
+
+   <div class="coordinate" id="chosen">
+    📍 No location selected
+   </div>
+
+   <p class="hint">
+    💡 Distance means the number of grid steps along the
+    horizontal and vertical lines combined. The clue does
+    not tell you the direction. Keep trying different points!
+   </p>
+
+  </aside>
+
+ </div>
+
+
+ <div class="controls">
+
+  <button class="secondary" id="soundBtn" aria-pressed="true">
+   🔊 Sound on
+  </button>
+
+  <button class="secondary" id="restartBtn">
+   ↻ Restart hunt
+  </button>
+
+ </div>
+
+</section>
+
+
+<!-- VICTORY SCREEN -->
+<section id="victory" class="win hidden">
+
+ <div class="trophy">🏴‍☠️ 💎 🏆</div>
+
+ <div class="eyebrow">Mission accomplished!</div>
+
+ <h2>YAHOO! All Gems Found!</h2>
+
+ <p>
+ Captain Barnacle has all five gems back!
+ The treasure is safe and the ship can finally set sail.
+ </p>
+
+ <div class="final-time" id="finalTime">00:00</div>
+
+ <div class="best-box">
+  🏆 Your best time: <b id="finalBest">00:00</b>
+ </div>
+
+ <p id="recordMessage">
+  Great treasure hunting, matey!
+ </p>
+
+ <button class="primary" id="playAgain">
+  ⚓ PLAY AGAIN
+ </button>
+
+</section>
+
+</main>
+
+<div class="footer">
+ ☠️ X first, then Y. Follow the clues, matey! ☠️
+</div>
+
+</div>
+
+
+<script>
+(()=>{
+
+const $=id=>document.getElementById(id);
+
+const intro=$('intro');
+const game=$('game');
+const victory=$('victory');
+const board=$('board');
+
+const landmarks=[
+ {name:'palm tree',icon:'🌴'},
+ {name:'rock',icon:'🪨'},
+ {name:'shipwreck',icon:'🚢'},
+ {name:'coconut tree',icon:'🌳'},
+ {name:'wooden barrel',icon:'🛢️'}
+];
+
+const gemIcons=['💎','💚','❤️','💜','💛'];
+
+let treasures=[];
+let found=0;
+let searched=new Set();
+let startAt=0;
+let timerId=null;
+let soundOn=true;
+let finished=false;
+let landmarkPositions=[];
+
+const BEST_KEY='piratesLostGemsBestTime_v2';
+
+
+function fmt(ms){
+ let s=Math.floor(ms/1000);
+ let m=Math.floor(s/60);
+ let r=s%60;
+
+ return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0');
+}
+
+
+function best(){
+ try{
+  let n=Number(localStorage.getItem(BEST_KEY));
+  return n>0?n:null;
+ }catch(e){
+  return null;
+ }
+}
+
+
+function updateBest(){
+ $('best').textContent=best()?fmt(best()):'—';
+}
+
+
+function say(t){
+ $('message').textContent=t;
+}
+
+
+function sound(kind){
+
+ if(!soundOn)return;
+
+ try{
+
+  let c=new(window.AudioContext||window.webkitAudioContext)();
+  let n=c.currentTime;
+
+  let notes=
+   kind==='win'?[523,659,784,1047]:
+   kind==='hit'?[660,880,1047]:
+   [220,180];
+
+  notes.forEach((f,i)=>{
+
+   let o=c.createOscillator();
+   let g=c.createGain();
+
+   o.type='sine';
+   o.frequency.value=f;
+
+   g.gain.setValueAtTime(.0001,n+i*.12);
+   g.gain.exponentialRampToValueAtTime(.12,n+i*.12+.025);
+   g.gain.exponentialRampToValueAtTime(.0001,n+i*.12+.19);
+
+   o.connect(g);
+   g.connect(c.destination);
+
+   o.start(n+i*.12);
+   o.stop(n+i*.12+.2);
+
+  });
+
+ }catch(e){}
+
+ if((kind==='hit'||kind==='win')&&'speechSynthesis'in window){
+
+  try{
+
+   speechSynthesis.cancel();
+
+   let u=new SpeechSynthesisUtterance(
+    kind==='win'
+     ?'Yarr! Yahoo! We found all the treasure!'
+     :'Yahoo! A shiny gem!'
+   );
+
+   u.rate=1.05;
+   u.pitch=1.15;
+
+   speechSynthesis.speak(u);
+
+  }catch(e){}
+ }
+
+}
+
+
+function dist(a,b){
+ return Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
+}
+
+
+function randCoord(){
+ return{
+  x:1+Math.floor(Math.random()*10),
+  y:1+Math.floor(Math.random()*10)
+ };
+}
+
+
+function makeRound(){
+
+ landmarkPositions=[];
+
+ const used=new Set();
+
+ for(let i=0;i<landmarks.length;i++){
+
+  let p;
+
+  do{
+   p=randCoord();
+  }while(used.has(p.x+','+p.y));
+
+  used.add(p.x+','+p.y);
+
+  landmarkPositions.push({
+   ...landmarks[i],
+   ...p,
+   key:p.x+','+p.y
+  });
+
+ }
+
+ treasures=[];
+
+ // Each gem is placed a set number of grid steps from its paired landmark.
+ const distances=[2,3,4,3,5];
+
+ for(let i=0;i<5;i++){
+
+  const lm=landmarkPositions[i];
+  const candidates=[];
+
+  for(let x=0;x<=10;x++){
+   for(let y=0;y<=10;y++){
+
+    const k=x+','+y;
+
+    if(
+     dist({x,y},lm)===distances[i]&&
+     !used.has(k)
+    ){
+     candidates.push({x,y,key:k});
+    }
+
+   }
+  }
+
+  // If a rare landmark placement has no free point at the target distance,
+  // use the next possible distance.
+
+  let d=distances[i];
+
+  while(!candidates.length&&d<=10){
+
+   d++;
+
+   for(let x=0;x<=10;x++){
+    for(let y=0;y<=10;y++){
+
+     let k=x+','+y;
+
+     if(
+      dist({x,y},lm)===d&&
+      !used.has(k)
+     ){
+      candidates.push({x,y,key:k});
+     }
+
+    }
+   }
+
+  }
+
+  const t=candidates[Math.floor(Math.random()*candidates.length)];
+
+  used.add(t.key);
+
+  treasures.push({
+   ...t,
+   landmark:lm,
+   distance:d,
+   gem:gemIcons[i]
+  });
+
+ }
+
+}
+
+
+function clueText(){
+
+ const t=treasures[found];
+
+ if(!t)return'All clues solved!';
+
+ return `A gem is <b>${t.distance} grid steps</b> away from the ${t.landmark.name} at <b>(${t.landmark.x}, ${t.landmark.y})</b>.`;
+
+}
+
+
+function updateClue(){
+
+ $('clue').innerHTML=clueText();
+
+ $('clueProgress').textContent=
+  found<5
+   ?`Clue ${found+1} of 5 · No direction is given!`
+   :'All five clues solved!';
+
+}
+
+
+/* BUILD COORDINATE BOARD */
 function buildBoard(){
+
  board.innerHTML='';
 
  // Create the coordinate grid and Y-axis numbers.
  for(let y=10;y>=0;y--){
+
   let yl=document.createElement('div');
+
   yl.className='y-tick';
   yl.style.gridColumn='1';
   yl.style.gridRow=String(11-y);
   yl.textContent=y;
+
   board.appendChild(yl);
 
+
+  // Create the coordinate cells.
   for(let x=0;x<=10;x++){
+
    let b=document.createElement('button');
+
    b.type='button';
    b.className='cell';
    b.dataset.key=x+','+y;
-   b.setAttribute('aria-label',`Search coordinate ${x}, ${y}`);
+
+   b.setAttribute(
+    'aria-label',
+    `Search coordinate ${x}, ${y}`
+   );
+
    b.style.gridColumn=String(x+2);
    b.style.gridRow=String(11-y);
 
-   const lm=landmarkPositions.find(p=>p.key===b.dataset.key);
+   const lm=landmarkPositions.find(
+    p=>p.key===b.dataset.key
+   );
 
    if(lm){
+
     b.classList.add('landmark');
     b.textContent=lm.icon;
     b.title=`${lm.name} at (${x}, ${y})`;
     b.disabled=true;
-    b.setAttribute('aria-label',`${lm.name} at coordinate ${x}, ${y}`);
-   }
-   else{
-    b.addEventListener('click',()=>search(x,y,b));
+
+    b.setAttribute(
+     'aria-label',
+     `${lm.name} at coordinate ${x}, ${y}`
+    );
+
+   }else{
+
+    b.addEventListener(
+     'click',
+     ()=>search(x,y,b)
+    );
+
    }
 
    board.appendChild(b);
+
   }
+
  }
+
 
  // Blank corner beneath the Y-axis.
  const corner=document.createElement('div');
+
  corner.style.gridColumn='1';
  corner.style.gridRow='12';
+
  board.appendChild(corner);
+
 
  // Add X-axis numbers from 0 to 10.
  for(let x=0;x<=10;x++){
+
   const xt=document.createElement('div');
+
   xt.className='x-tick';
   xt.style.gridColumn=String(x+2);
   xt.style.gridRow='12';
   xt.textContent=x;
+
   board.appendChild(xt);
+
  }
+
 }
+
+
+/* START OR RESTART GAME */
+function start(){
+
+ clearInterval(timerId);
+
+ found=0;
+ searched.clear();
+ finished=false;
+
+ makeRound();
+
+ for(let i=0;i<5;i++){
+  $('gem'+i).classList.remove('found');
+ }
+
+ $('count').textContent='0 / 5';
+ $('timer').textContent='00:00';
+ $('pirate').textContent='🏴‍☠️';
+ $('chosen').textContent='📍 No location selected';
+
+ say(
+  'Arrr! Study the island landmarks and read your first clue. Find the hidden gem, then move on to the next clue!'
+ );
+
+ updateClue();
+ buildBoard();
+ updateBest();
+
+ intro.classList.add('hidden');
+ victory.classList.add('hidden');
+ game.classList.remove('hidden');
+
+ startAt=Date.now();
+
+ timerId=setInterval(
+  ()=>$('timer').textContent=fmt(Date.now()-startAt),
+  250
+ );
+
+}
+
+
+/* SEARCH FOR A GEM */
+function search(x,y,b){
+
+ if(finished)return;
+
+ let key=x+','+y;
+
+ if(searched.has(key))return;
+
+ searched.add(key);
+
+ b.disabled=true;
+
+ $('chosen').textContent=`📍 You searched: (${x}, ${y})`;
+
+ const t=treasures[found];
+
+ if(t&&t.key===key){
+
+  b.classList.add('hit');
+  b.textContent=t.gem;
+
+  $('gem'+found).classList.add('found');
+
+  found++;
+
+  $('count').textContent=found+' / 5';
+  $('pirate').textContent='🤩';
+
+  sound('hit');
+
+  say(
+   found===5
+    ?'YAHOO! The final gem! You found all five! Captain Barnacle is ready to sail!'
+    :`YAHOO! You found a gem at (${x}, ${y})! Great work, matey. Here comes your next clue!`
+  );
+
+  updateClue();
+
+  if(found===5)finish();
+
+ }else{
+
+  b.classList.add('miss');
+  b.textContent='·';
+
+  $('pirate').textContent='🏴‍☠️';
+
+  sound('miss');
+
+  say(
+   `Arrr, no gem at (${x}, ${y})! Keep searching. Check the distance clue and try another point, matey!`
+  );
+
+ }
+
+}
+
+
+/* FINISH GAME */
+function finish(){
+
+ finished=true;
+
+ clearInterval(timerId);
+
+ let elapsed=Date.now()-startAt;
+ let old=best();
+
+ let record=!old||elapsed<old;
+
+ if(record){
+
+  try{
+   localStorage.setItem(BEST_KEY,String(elapsed));
+  }catch(e){}
+
+ }
+
+ sound('win');
+
+ $('finalTime').textContent=fmt(elapsed);
+ $('finalBest').textContent=fmt(best());
+
+ $('recordMessage').textContent=
+  record
+   ?'🎉 NEW RECORD! That is your fastest treasure hunt yet!'
+   :'Well done, matey! Can you beat your best time?';
+
+ setTimeout(()=>{
+
+  game.classList.add('hidden');
+  victory.classList.remove('hidden');
+
+ },650);
+
+}
+
+
+/* BUTTON EVENTS */
+$('startBtn').addEventListener('click',start);
+
+$('restartBtn').addEventListener('click',()=>{
+
+ if(confirm('Start a new treasure hunt? Your current hunt will restart.')){
+  start();
+ }
+
+});
+
+$('playAgain').addEventListener('click',start);
+
+
+$('soundBtn').addEventListener('click',()=>{
+
+ soundOn=!soundOn;
+
+ $('soundBtn').textContent=
+  soundOn?'🔊 Sound on':'🔇 Sound off';
+
+ $('soundBtn').setAttribute(
+  'aria-pressed',
+  String(soundOn)
+ );
+
+ if(!soundOn&&'speechSynthesis'in window){
+  speechSynthesis.cancel();
+ }
+
+});
+
+
+updateBest();
+
+})();
+</script>
+
+</body>
+</html>
