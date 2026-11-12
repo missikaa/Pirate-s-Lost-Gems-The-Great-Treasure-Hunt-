@@ -8,42 +8,47 @@
 :root{
   --sea:#103f4a;--deep:#092d38;--teal:#1c6470;--sand:#f5dfad;
   --paper:#fff3d5;--ink:#49331f;--gold:#f5bd45;--wood:#7b4828;
-  --mint:#a9d8c5;--red:#b94e48;
+  --axis:#4a2b11;
 }
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:Georgia,"Trebuchet MS",serif;
- background:radial-gradient(circle at 20% 10%,#347c82 0,#174e5a 42%,#092d38 100%);padding:22px}
+ background:radial-gradient(circle at 20% 10%,#347c82 0,#174e5a 42%,#092d38 100%);padding:20px}
 button{font:inherit;cursor:pointer}
-.shell{max-width:1050px;margin:auto}
+.shell{max-width:1080px;margin:auto}
 .topline{display:flex;justify-content:space-between;align-items:center;color:#ffe8b4;gap:12px;margin:0 4px 14px}
 .brand{font-weight:bold;letter-spacing:1.5px}
 .seal{border:1px solid #e9c77c;border-radius:30px;padding:7px 13px;font-size:.85rem}
 .panel{background:var(--paper);border:7px solid #754627;border-radius:24px;box-shadow:0 12px 0 #08252c,0 20px 35px #061c2480;overflow:hidden}
 .hero{padding:clamp(24px,5vw,55px);text-align:center;position:relative;
- background:linear-gradient(#fff3d5eF,#f4dca9ee),repeating-linear-gradient(45deg,#d9bd82 0 2px,#f4dca9 2px 7px)}
+ background:linear-gradient(#fff3d5ef,#f4dca9ee),repeating-linear-gradient(45deg,#d9bd82 0 2px,#f4dca9 2px 7px)}
 .eyebrow{font-size:.8rem;letter-spacing:3px;text-transform:uppercase;color:#95602e;font-weight:bold}
 h1{font-size:clamp(2.1rem,6vw,4.4rem);line-height:1.02;margin:12px 0;color:#633b20;text-shadow:2px 3px #e8c477}
-.hero-art{font-size:clamp(4rem,12vw,7rem);margin:10px 0;filter:drop-shadow(0 5px 2px #8c623c55)}
+.hero-art{font-size:clamp(3.6rem,11vw,6.2rem);margin:10px 0;filter:drop-shadow(0 5px 2px #8c623c55)}
 .hero p{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.6;max-width:650px;margin:12px auto 24px}
 .primary{background:linear-gradient(#ffd56b,#eaa52d);border:3px solid #9a5b22;color:#563416;border-radius:14px;padding:13px 27px;font-weight:bold;font-size:1.05rem;box-shadow:0 5px 0 #9a5b22;transition:.15s}
 .primary:hover{transform:translateY(-2px);box-shadow:0 7px 0 #9a5b22}
 .primary:active{transform:translateY(3px);box-shadow:0 2px 0 #9a5b22}
 .note{font-size:.83rem;color:#80613d;margin-top:18px}
 .hidden{display:none!important}
-.game-wrap{padding:clamp(14px,3vw,28px)}
-.game-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+.game-wrap{padding:clamp(14px,3vw,26px)}
+.game-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .game-title{font-size:clamp(1.3rem,3vw,2rem);margin:0;color:#633b20}
 .stats{display:flex;gap:9px;flex-wrap:wrap}
-.stat{background:#f8e5b9;border:2px solid #d5b475;border-radius:12px;padding:8px 12px;text-align:center;min-width:94px}
+.stat{background:#f8e5b9;border:2px solid #d5b475;border-radius:12px;padding:7px 12px;text-align:center;min-width:90px}
 .stat small{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:#8a6538}
-.stat strong{font-size:1.15rem;font-variant-numeric:tabular-nums}
+.stat strong{font-size:1.1rem;font-variant-numeric:tabular-nums}
+
+/* Distinct Colored Gem Slots */
 .gem-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#ead19b;border:2px dashed #bb9455;border-radius:13px;padding:10px 14px;margin-bottom:14px}
 .gem-row strong{font-size:.95rem}
-.gems{display:flex;gap:9px;font-size:1.55rem}
-.gem-slot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#c5a36c55;border:1px solid #b78a4b;filter:grayscale(1);opacity:.5}
-.gem-slot.found{filter:none;opacity:1;background:#fff2c4;box-shadow:0 0 10px #e7b849}
-.play-area{display:grid;grid-template-columns:minmax(0,1fr) 235px;gap:17px;align-items:start}
-.board-card{background:#e6c98e;border:3px solid #9d6a36;border-radius:16px;padding:12px}
-.board-caption{text-align:center;font-weight:bold;margin:0 0 9px;color:#684321}
-.board-shell{display:flex;align-items:center;justify-content:center;gap:6px;max-width:685px;margin:auto}
-.axis-y-title{writing-mode:vertical-rl;transform:rotate(180deg);font-size:.82rem;font-weight:bold;letter-spacing:1.5px;color:#70451f
+.gems{display:flex;gap:10px;flex-wrap:wrap}
+.gem-slot{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:#c5a36c44;border:1.5px solid #b78a4b;filter:grayscale(1);opacity:.55;font-size:.82rem;font-weight:bold;transition:.25s}
+.gem-slot .icon{font-size:1.25rem}
+.gem-slot.found{filter:none;opacity:1;background:#fff7dc;transform:scale(1.04)}
+.gem-slot[data-color="blue"].found{border-color:#1e88e5;box-shadow:0 0 10px #42a5f588;color:#0d47a1}
+.gem-slot[data-color="green"].found{border-color:#2e7d32;box-shadow:0 0 10px #66bb6a88;color:#1b5e20}
+.gem-slot[data-color="red"].found{border-color:#c62828;box-shadow:0 0 10px #ef535088;color:#b71c1c}
+.gem-slot[data-color="purple"].found{border-color:#6a1b9a;box-shadow:0 0 10px #ab47bc88;color:#4a148c}
+.gem-slot[data-color="gold"].found{border-color:#ef6c00;box-shadow:0 0 10px #ffa72688;color:#e65100}
+
+.play-area{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:17
